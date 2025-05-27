@@ -100,6 +100,7 @@ def main(page: ft.Page):
 
     page.add(ft.Divider(color="black"), btn_container)
     page.update()
+
     #nuevo medicamento y listado de medicamentos
 
 if __name__ == "__main__":
