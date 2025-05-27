@@ -1,100 +1,107 @@
 import flet as ft
+import consulta_airtable as cat
+import consultas as consul
 
 
 def main(page: ft.Page):
-    page.title = "Farmi-UJAT"
-    page.theme_mode = ft.colors.WHITE
-    page.theme_mode = ft
-    page.appbar = ft.AppBar(
-        title=ft.Text("FARMI-UJAT",size=30),
-        center_title=True,
+
+    def mostrar_interacciones(e: ft.ControlEvent):
+        page.clean()
+        cat.main(page)
+
+    def mostras_medicamentos(e: ft.ControlEvent):
+        page.clean()
+        consul.main(page)
         
+
+    page. title = "FARMI-UJAT"
+    page.appbar = ft.AppBar(
+        title = ft.Text("FARMI-UJAT", size=40),
+        center_title=True
     )
 
     btn_interacciones = ft.FilledButton(
-        content=ft.Container(
+        content = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Icon("medication", color="green", size=60),
-                    ft.Text("Interacciones Medicamentosas", color="black", text_align=ft.TextAlign.CENTER,weight=ft.FontWeight.BOLD)
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=5
+                    ft.Icon("medication", size=40, color="BLUEGREY500"),
+                    ft.Text("Interacciones medicamentosas", text_align=ft.TextAlign.CENTER)
+                ], 
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER
             ),
-            padding=10,
-            alignment=ft.alignment.center,
+            padding = 10,
+            height=100
         ),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=10),
-            side=ft.BorderSide(1, "orange")
+            side=ft.Border(1, "green")
         ),
-        bgcolor="orange100",
+        bgcolor="GREEN200",
+        color="black",
         width=200,
-        height=150
+        on_click=mostrar_interacciones
     )
 
-
-
-    btn_nuevo_medicamento = ft.FilledButton(
-        content=ft.Container(
+    btn_medicamento = ft.FilledButton(
+        content = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Icon("LOCAL_HOSPITAL_OUTLINED", color="Purple", size=60),
-                    ft.Text("Alta Medicamento", color="black", text_align=ft.TextAlign.CENTER,weight=ft.FontWeight.BOLD)
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=5
+                    ft.Icon("MEDICATION_OUTLINED", size=40, color="BLUEGREY700"),
+                    ft.Text("Nuevo medicamento", text_align=ft.TextAlign.CENTER)
+                ], 
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER
             ),
-            padding=10,
-            alignment=ft.alignment.center,
+            padding = 10,
+            height=100
         ),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=10),
-            side=ft.BorderSide(1, "green")
+            side=ft.Border(1, "green")
         ),
-        bgcolor="green100",
-        width=200,
-        height=150
+        bgcolor="GREEN300",
+        color="black",
+        width=200
     )
 
-    btn_lista_medicamento= ft.FilledButton(
-        content=ft.Container(
+    btn_lista = ft.FilledButton(
+        content = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Icon("LIST_ALT", color="brown", size=60,),
-                    ft.Text("Lista Medicamento", color="black", text_align=ft.TextAlign.CENTER,weight=ft.FontWeight.BOLD)
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=5
+                    ft.Icon("FEATURED_PLAY_LIST", size=40, color="BLUEGREY900"),
+                    ft.Text("Lista de medicamentos", text_align=ft.TextAlign.CENTER)
+                ], 
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER
             ),
-            padding=10,
-            alignment=ft.alignment.center,
+            padding = 10,
+            height=100
         ),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=10),
-            side=ft.BorderSide(1, "blue")
+            side=ft.Border(1, "green")
         ),
-        bgcolor="blue100",
+        bgcolor="GREEN400",
+        color="black",
         width=200,
-        height=150
+        on_click= mostras_medicamentos
     )
 
+    btn_container = ft.Container(
+    content=ft.Row(
+        controls=[
+            btn_interacciones,
+            btn_medicamento,
+            btn_lista
+        ],
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=30
+    ),
+    alignment=ft.alignment.center
+)
 
-
-    page.add(ft.Divider(color=ft.colors.BLACK))
-
-
-    page.add(
-        ft.Row(
-            controls=[
-                btn_interacciones,
-                btn_nuevo_medicamento,
-                btn_lista_medicamento
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,  # Centra los botones horizontalmente
-        )
-    )
-    
+    page.add(ft.Divider(color="black"), btn_container)
     page.update()
+    #nuevo medicamento y listado de medicamentos
 
-ft.app(target=main, view=ft.AppView.WEB_BROWSER)
+if __name__ == "__main__":
+    ft.app(target=main, view=ft.AppView.WEB_BROWSER)
+#flet tun -w main.py
