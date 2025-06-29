@@ -1,15 +1,13 @@
 import flet as ft
 import nube as nb
-import importlib  # Necesario para importar dinámicamente
+import importlib
 
 def main(page: ft.Page):
     def regresar(e: ft.ControlEvent):
         page.clean()
-        # Importación dinámica para evitar circularidad
         ma = importlib.import_module("main")
-        ma.main(page)  # Llama a la función main de main.py
+        ma.main(page)
 
-    # --- Configuración de la página ---
     page.title = "Interacciones Medicamentosas"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.scroll = True
@@ -20,10 +18,8 @@ def main(page: ft.Page):
         center_title=True,
     )
 
-    # --- Conexión a base de datos ---
     nb.farmacia_ujat.connect()
 
-    # --- Tabla de datos ---
     encabezado = [
         ft.DataColumn(ft.Text("Medicamento", weight="bold")),
         ft.DataColumn(ft.Text("Interacciones", weight="bold"))
@@ -32,14 +28,10 @@ def main(page: ft.Page):
     filas = []
     datos = nb.Receta.select()
     for d in datos:
-        filas.append(
-            ft.DataRow(
-                cells=[
-                    ft.DataCell(ft.Text(d.medicamento)),
-                    ft.DataCell(ft.Text(d.interacciones))
-                ]
-            )
-        )
+        filas.append(ft.DataRow([
+            ft.DataCell(ft.Text(d.medicamento)),
+            ft.DataCell(ft.Text(d.interacciones))
+        ]))
 
     tabla = ft.DataTable(
         columns=encabezado,
@@ -50,7 +42,6 @@ def main(page: ft.Page):
         vertical_lines=ft.border.BorderSide(1, ft.Colors.GREY_300),
     )
 
-    # --- Botón de regreso ---
     btn_regresar = ft.ElevatedButton(
         text="Regresar al Menú Principal",
         icon=ft.Icons.ARROW_BACK,
@@ -62,20 +53,11 @@ def main(page: ft.Page):
         )
     )
 
-    # --- Diseño final ---
     page.add(
-        ft.Container(
-            content=tabla,
-            margin=ft.margin.all(20),
-            padding=ft.padding.all(10),
-        ),
-        ft.Row(
-            [btn_regresar],
-            alignment=ft.MainAxisAlignment.CENTER,
-        )
+        ft.Container(content=tabla, margin=ft.margin.all(20), padding=ft.padding.all(10)),
+        ft.Row([btn_regresar], alignment=ft.MainAxisAlignment.CENTER)
     )
 
-    # --- Cerrar conexión ---
     nb.farmacia_ujat.close()
 
 if __name__ == "__main__":
