@@ -1,0 +1,4 @@
+flet
+peewee
+psycopg2-binary
+flask
