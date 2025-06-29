@@ -1,86 +1,54 @@
 import flet as ft
 import nube as nb
-import importlib  # Necesario para importar dinámicamente
+import main as ma
+
 
 def main(page: ft.Page):
+    # Abrir conexión a la base de datos
+
     def regresar(e: ft.ControlEvent):
         page.clean()
-        # Importación dinámica para evitar circularidad
-        ma = importlib.import_module("main")
-        ma.main(page)  # Llama a la función main de main.py
+        ma.main(page)
 
-    # --- Configuración de la página ---
-    page.title = "Interacciones Medicamentosas"
-    page.theme_mode = ft.ThemeMode.LIGHT
-    page.scroll = True
-    page.appbar = ft.AppBar(
-        title=ft.Text("Interacciones Medicamentosas - UJAT"),
-        leading=ft.Icon(name="SCIENCE", color=ft.colors.WHITE),
-        bgcolor=ft.colors.BLUE,
-        center_title=True,
-    )
 
-    # --- Conexión a base de datos ---
+    
     nb.farmacia_ujat.connect()
 
-    # --- Tabla de datos ---
+    page.title = "Recetas"
+    page.theme_mode = "light"
+    page.scroll = True
+    page.appbar = ft.AppBar(
+        title=ft.Text("Listado de medicamentos UJAT"),
+        leading=ft.Icon("LIST_ALT", color=ft.Colors.WHITE),
+        bgcolor="blue",
+        center_title=True,
+    )
     encabezado = [
-        ft.DataColumn(ft.Text("Medicamento", weight="bold")),
-        ft.DataColumn(ft.Text("Interacciones", weight="bold"))
+        ft.DataColumn(ft.Text("Medicamento")),
+        ft.DataColumn(ft.Text("Interacciones"))
     ]
-
     filas = []
+
     datos = nb.Receta.select()
     for d in datos:
-        filas.append(
-            ft.DataRow(
-                cells=[
-                    ft.DataCell(ft.Text(d.medicamento)),
-                    ft.DataCell(ft.Text(d.interacciones))
-                ]
-            )
-        )
+        celda1 = ft.DataCell(ft.Text(d.medicamento))
+        celda2 = ft.DataCell(ft.Text(d.interacciones))
+        fila = ft.DataRow([celda1, celda2])
+        filas.append(fila)
 
-    tabla = ft.DataTable(
+    tbl_medicamentos = ft.DataTable(
         columns=encabezado,
-        rows=filas,
-        border=ft.border.all(1, ft.colors.GREY_400),
-        border_radius=10,
-        horizontal_lines=ft.border.BorderSide(1, ft.colors.GREY_300),
-        vertical_lines=ft.border.BorderSide(1, ft.colors.GREY_300),
+        rows=filas
     )
 
-    # --- Botón de regreso ---
-    btn_regresar = ft.ElevatedButton(
-        text="Regresar al Menú Principal",
-        icon=ft.icons.ARROW_BACK,
-        on_click=regresar,
-        style=ft.ButtonStyle(
-            padding=20,
-            bgcolor=ft.colors.BLUE_700,
-            color=ft.colors.WHITE
-        )
-    )
+    btn_regresar = ft.ElevatedButton(text="Regresar", icon="arrow_back", on_click=regresar)
 
-    # --- Diseño final ---
-    page.add(
-        ft.Container(
-            content=tabla,
-            margin=ft.margin.all(20),
-            padding=ft.padding.all(10),
-        ),
-        ft.Row(
-            [btn_regresar],
-            alignment=ft.MainAxisAlignment.CENTER,
-        )
-    )
 
-    # --- Cerrar conexión ---
+    page.add(btn_regresar,tbl_medicamentos)
+    page.update()
+
     nb.farmacia_ujat.close()
 
+
 if __name__ == "__main__":
-    ft.app(
-        target=main,
-        view=ft.AppView.WEB_BROWSER,
-        port=8505
-    )
+    ft.app(target=main,view=ft.AppView.WEB_BROWSER)
