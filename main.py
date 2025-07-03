@@ -3,7 +3,6 @@ import consulta_airtable as cat
 import consultas as consul
 import altas_medicamentos as altas_m
 
-
 def main(page: ft.Page):
 
     def mostrar_interacciones(e: ft.ControlEvent):
