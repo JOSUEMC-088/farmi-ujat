@@ -1,6 +1,5 @@
 import peewee as pw
 
-
 # Conexión a la base de datos en Neon
 farmacia_ujat = pw.PostgresqlDatabase(
     'neondb',
